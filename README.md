@@ -384,23 +384,27 @@ Then, we will plot a histogram chart to visualize the differences between churn 
  [In 10]:
 
 ```python
-# Select top features affecting Churn
+import time
+from sklearn.metrics import recall_score
+
+# Lấy 5 biến quan trọng nhất
 top_features = ['Tenure', 'CashbackAmount', 'WarehouseToHome', 'Complain', 'DaySinceLastOrder']
-x_1 = df[top_features]
-y_1 = df['Churn']
+x_q2 = df_encoded[top_features]
+y_q2 = df_encoded['Churn']
 
-# Split: 70% train, 30% temp (val + test)
-x_train1, x_val1, y_train1, y_val1 = train_test_split(x_1, y_1, test_size=0.3, random_state=42)
+# Chia tập dữ liệu (70% train, 15% validation, 15% test)
+x_train_q2, x_temp, y_train_q2, y_temp = train_test_split(x_q2, y_q2, test_size=0.3, random_state=42)
+x_val_q2, x_test_q2, y_val_q2, y_test_q2 = train_test_split(x_temp, y_temp, test_size=0.5, random_state=42)
 
-# Split temp into 15% val, 15% test
-x_val1, x_test1, y_val1, y_test1 = train_test_split(x_val1, y_val1, test_size=0.5, random_state=42)
+# Chuẩn hóa
+scaler_q2 = StandardScaler()
+x_train_q2_scaled = scaler_q2.fit_transform(x_train_q2)
+x_val_q2_scaled = scaler_q2.transform(x_val_q2)
+x_test_q2_scaled = scaler_q2.transform(x_test_q2)
 
-#Normalize data
-from sklearn.preprocessing import StandardScaler
-scaler_1 = StandardScaler()
-x_train1_scaled = scaler.fit_transform(x_train1)
-x_val1_scaled = scaler.transform(x_val1)
-x_test1_scaled = scaler.transform(x_test1)
+print(f"Kích thước tập Train: {x_train_q2.shape}")
+print(f"Kích thước tập Val: {x_val_q2.shape}")
+print(f"Kích thước tập Test: {x_test_q2.shape}")
 
 ```
 
@@ -414,69 +418,81 @@ x_test1_scaled = scaler.transform(x_test1)
 
 **2. Model Comparison & Selection**  
 
-| Model                  | Recall Score |
-|------------------------|--------------|
-| **Random Forest**      | **0.6980**    |
-| Logistic Regression   | 0.3289       |
-| KNN                   | 0.4698       |
-| Gradient Boosting     | 0.5168       |
+[In 11] :
+
+```python
+models = {
+    "Random Forest": RandomForestClassifier(n_estimators=100, max_depth=15, random_state=42),
+    "Logistic Regression": LogisticRegression(),
+    "KNN": KNeighborsClassifier(),
+    "XGBoost": xgb.XGBClassifier(use_label_encoder=False, eval_metric='logloss'),
+    "Gradient Boosting": GradientBoostingClassifier()
+}
+
+results = {}
+
+for name, model in models.items():
+    model.fit(x_train_q2_scaled, y_train_q2)
+    y_val_pred = model.predict(x_val_q2_scaled)
+    recall = recall_score(y_val_q2, y_val_pred)
+    results[name] = recall
+    print(f"{name} - Recall trên tập Validation: {recall:.4f}")
+
+# Vẽ biểu đồ so sánh
+plt.figure(figsize=(10, 5))
+sns.barplot(x=list(results.keys()), y=list(results.values()), palette='viridis')
+plt.title('So sánh Recall Score giữa các mô hình (Validation Set)')
+plt.ylabel('Recall Score')
+plt.show()
+```
+
+[Out 12] :
+
+![image](https://github.com/LeAnhTuan289/E-Commerce-Customer-Churn-Prediction-Machine-Learning---Python/blob/3f45b4a9fbe0d59515ca9d9d24b12ffdb5e43e48/documents/p6.png)
 
 - After testing five models, **Random Forest achieved the highest Recall score**.  
 - → **Select Random Forest and proceed with fine-tuning** to improve performance.  
 
 **3. Apply Model & Fine tune**
 
-[In 11]: 
-
-Apply XGBoost
-
-```python
-# Initialize the XGBoost model
-xgb_model = xgb.XGBClassifier()
-
-# Train the model with the scaled training data
-xgb_model.fit(x_train1_scaled, y_train1)
-
-# Make predictions on the validation set
-y_pred_val_xgb = xgb_model.predict(x_val1_scaled)
-
-# Evaluate the model using the recall score
-recall_XGB = recall_score(y_val1, y_pred_val_xgb)
-
-```
 
 [In 12]: 
 
 Fine-tune XGBoost Model 
 
 ```python
-# Set param
-param_xgb = {
-    'n_estimators': [50, 100, 200, 300, 500],
-    'max_depth': [3, 5, 7, 10],
-    'learning_rate': [0.01, 0.05, 0.1, 0.2],
-    'subsample': [0.6, 0.8, 1.0],
-    'colsample_bytree': [0.6, 0.8, 1.0],
-    'gamma': [0, 0.1, 0.2, 0.3],
-    'min_child_weight': [1, 3, 5]
+# Lưới tham số cho Random Forest
+param_dist_rf = {
+    'n_estimators': [100, 200, 300, 400],
+    'max_depth': [10, 15, 20, 25, None],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4],
+    'bootstrap': [True, False]
 }
 
-# Perform a randomized search over the specified parameter grid
-rf_finetune = RandomizedSearchCV(estimator=xgb_model, param_distributions=param_xgb, n_iter=20, cv=5, scoring='recall', random_state=42)
+# Tối ưu hóa mô hình dựa trên Recall score
+rf_random_search = RandomizedSearchCV(
+    RandomForestClassifier(random_state=42),
+    param_distributions=param_dist_rf,
+    n_iter=20,
+    cv=5,
+    scoring='recall',
+    random_state=42,
+    n_jobs=-1
+)
 
-# Fit the randomized search model on the training data
-rf_finetune.fit(x_train1_scaled, y_train1)
+print("Đang tối ưu hóa mô hình Random Forest (Question 2)...")
+rf_random_search.fit(x_train_q2_scaled, y_train_q2)
 
-# Print the best hyperparameters found by the search
-print("Best parameters found:", rf_finetune.best_params_)
-
-# Print the best recall score obtained during cross-validation
-print("Best recall score:", rf_finetune.best_score_)
+# Lấy mô hình tốt nhất
+best_rf_model = rf_random_search.best_estimator_
+print(f"Best Parameters: {rf_random_search.best_params_}")
+print(f"Best Validation Recall: {rf_random_search.best_score_:.4f}")
 ```
 
 [Out 12]:  
 
-![Image](https://github.com/user-attachments/assets/0c0ace85-a202-494b-a039-266ff6fdd82b)
+![Image](https://github.com/LeAnhTuan289/E-Commerce-Customer-Churn-Prediction-Machine-Learning---Python/blob/10679a98c1cdfb94073397e17bab13bed967c7d4/documents/Screenshot%202026-07-01%20170032.png)
 
 ## 6️⃣ **Customer Segmentation Using Clustering**  
 
@@ -517,7 +533,7 @@ pca.explained_variance_ratio_
 
 [Out 13]:
 
-![Image](https://github.com/user-attachments/assets/c01e6ec8-21cb-4961-be60-c4deeee62f82)
+![Image](https://github.com/LeAnhTuan289/E-Commerce-Customer-Churn-Prediction-Machine-Learning---Python/blob/4051232dc603da8a6c953bde21493fff9585c304/documents/p8.png)
 
 ### 📝 **Apply Model & Clustering**
 
@@ -545,7 +561,7 @@ plt.show()
 
 [Out 14]:
 
-![image](https://github.com/user-attachments/assets/a6d14cac-5b79-4e70-b601-ea44d7e024fe)
+![image](https://github.com/LeAnhTuan289/E-Commerce-Customer-Churn-Prediction-Machine-Learning---Python/blob/4051232dc603da8a6c953bde21493fff9585c304/documents/p9.png)
 
 -> We will choose **K=4**
 
@@ -574,13 +590,13 @@ sil_score = silhouette_score(pca_df, predicted_labels)
 print(sil_score)
 ```
 
-[Out 15]: 0.2281232336641304
+[Out 15]: 0.16964175320877975
 
 **Step 4: Visulize Distribution & Clusters**
 
-![image](https://github.com/user-attachments/assets/aec05f64-9c48-4090-a4ea-55bb56bd7a0b)
+![image](https://github.com/LeAnhTuan289/E-Commerce-Customer-Churn-Prediction-Machine-Learning---Python/blob/5708060c2616131c1e78a2a773a08d4dde77f7fc/documents/Screenshot%202026-07-01%20170804.png)
 
-![image](https://github.com/user-attachments/assets/db3e5e49-9d2e-4fa4-a94a-e34b07b555d6)
+![image](https://github.com/LeAnhTuan289/E-Commerce-Customer-Churn-Prediction-Machine-Learning---Python/blob/5708060c2616131c1e78a2a773a08d4dde77f7fc/documents/Screenshot%202026-07-01%20170720.png)
 
 
 ### **💡Conclusion: **
@@ -608,7 +624,7 @@ plt.show()
 
 [Out 16]:
 
-![image](https://github.com/user-attachments/assets/5261d06a-9fc9-4b92-9f3d-0ab91deef307)
+![image](https://github.com/LeAnhTuan289/E-Commerce-Customer-Churn-Prediction-Machine-Learning---Python/blob/a559229b26ab6e3a671d093e4e7e41584fcf6321/documents/Screenshot%202026-07-01%20171422.png)
 
 **Step 6: Evaluate Dendrogram**
 
@@ -632,7 +648,7 @@ plt.show()
 
 [Out 17]:
 
-Silhouette Score: 0.1319127936694198 -> **too low**
+Silhouette Score: 0.32238739179773573 -> **too low**
 
 ## 7️⃣ **Recommendation for Clustering**
 
