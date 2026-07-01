@@ -648,12 +648,12 @@ plt.show()
 
 [Out 17]:
 
-Silhouette Score: 0.32238739179773573 -> **too low**
+Silhouette Score: 0.32238739179773573 -> **low**
 
 ## 7️⃣ **Recommendation for Clustering**
 
 - **Gather more data on churned users**:  
-  - To improve the model, we can **collect additional data** on churned users, either by gathering real data from the business or by using our **supervised model to predict churn**. The predicted churn data can serve as ground truth for refining the clustering model.
+  - To improve the model, we can **collect additional data** on churned users, either by gathering real data from the business or by using our **supervised model to predict churn**. The predicted churn data can serve as a reference or a new feature for refining the clustering model.
   
 - **Run promotions for churned users**:  
   - **Offer promotions** to all users identified as churned, and **track the results**. These insights can be used as **additional features** in future models, helping to enhance the accuracy and effectiveness of churn prediction over time.
