@@ -366,89 +366,112 @@ Then, we will plot a histogram chart to visualize the differences between churn 
 
 ![Image](https://github.com/LeAnhTuan289/E-Commerce-Customer-Churn-Prediction-Machine-Learning---Python/blob/fd628395ff011ba158a382848dd5d9b8a3a5083c/documents/p5.png)
 
-## 4️⃣ **Key Findings and Recommendations for Retention**
+## 4️⃣ Key Findings and Recommendations for Retention
 
 ### 💡 Key Findings
 
 | Metric | Churn (Blue) | Non-Churn (Yellow) | Key Finding |
 |----------------------------|-------------|---------------------|---------|
-| **Tenure (Customer Lifespan)** | Around **80%** of churned customers leave within the first **5 months**, with very few remaining beyond **10 months**. | Customer tenure is more evenly distributed, with many staying **over 20 months**. | **Customer churn is concentrated during the early lifecycle**, indicating that the onboarding stage is the most critical period for retention. |
-| **CashbackAmount** | Cashback is generally **lower (100–200)**. | Cashback is mostly concentrated between **120–250**. | Customers receiving **lower cashback** are more likely to churn, suggesting that perceived financial value influences retention. |
-| **WarehouseToHome** | Delivery times are widely distributed, with many orders taking **15–30 days** or longer. | Most deliveries are completed within **20 days**. | Longer delivery times are associated with a higher churn rate, highlighting the importance of logistics performance. |
-| **Complain** | Around **50%** of churned customers submit complaints, while many others leave without providing feedback. | Only **10–15%** of retained customers complain. | Poor service experience is strongly linked to churn, and many dissatisfied customers leave silently without reporting issues. |
-| **DaySinceLastOrder** | Most churned customers have been inactive for **more than 10 days**. | Active customers typically place another order within **10 days**. | Purchase inactivity is one of the earliest behavioral indicators of churn. |
+| **Tenure (Customer Lifespan)** | Around **80%** of churned customers leave within the first **5 months**, with very few remaining beyond **10 months**. | Customer tenure is more evenly distributed, with many staying **over 20 months**. | **Customer churn is concentrated during the early lifecycle**, making the onboarding stage the most critical period for retention. |
+| **CashbackAmount** | Cashback is generally **100–200**, with a wider distribution. | Cashback is mostly concentrated between **120–250**. | Customers receiving **lower cashback** tend to have a higher probability of churning, suggesting that financial incentives influence retention. |
+| **WarehouseToHome** | Delivery time varies widely, averaging **15–30 days**, with some orders taking over **35 days**. | Most deliveries are completed within **20 days**. | Longer delivery times are associated with higher churn and lower customer satisfaction. |
+| **Complain** | Around **50%** of churned customers complain, while many others leave without providing feedback. | Only **10–15%** of retained customers submit complaints. | Poor service experience contributes to churn, and many dissatisfied customers leave silently without reporting issues. |
+| **DaySinceLastOrder** | Most churned customers have not placed an order for **more than 10 days**. | Active customers usually place another order within **10 days**. | Purchase inactivity is one of the strongest early behavioral signals of customer churn. |
 
 ---
 
-### 🚀 Business Recommendations
+## 🚀 Business Recommendations
 
-#### 🎯  Prioritize Early-Life Customer Retention
+The following recommendations are directly derived from the EDA findings above.
 
-Since nearly **80% of churn occurs within the first five months**, retention resources should be concentrated on customers during this period instead of being distributed equally across all customers.
+### 🎯 Early Engagement Campaign
+
+Since nearly **80% of customers churn within their first five months**, customer retention efforts should focus on this critical period.
 
 **Recommended actions**
 
-- Trigger an onboarding workflow immediately after the first purchase.
-- Send educational emails and personalized offers every week during the first **60 days**.
-- Flag customers who have not completed a second purchase within **30 days** for manual follow-up.
+- Automate onboarding emails and in-app guidance during the first **60 days** after registration.
+- Offer welcome promotions and exclusive discounts after the first purchase to encourage the second purchase.
+- Monitor customers who do not return within **30 days** and trigger personalized follow-up campaigns.
 
-**Business objective:** Increase second-purchase rate and reduce early-stage churn.
+**Expected business outcome**
+
+- Increase second-purchase rate.
+- Improve customer engagement during the highest-risk period.
+- Reduce early-stage customer churn.
 
 ---
 
-#### 💰 Redesign Cashback Strategy for New Customers
+### 💰 Optimize Cashback & Financial Incentives
 
-EDA shows that churned customers generally receive lower cashback rewards.
+EDA indicates that churned customers generally receive lower cashback than retained customers.
 
 **Recommended actions**
 
-- Guarantee a minimum cashback level for customers during their first three orders.
-- Introduce milestone rewards (e.g., bonus cashback after the 2nd and 5th purchase).
-- Target customers whose cashback amount falls below the average retained-customer range (**120–250**) with personalized reward campaigns.
+- Review cashback policies for new customers to ensure competitive reward levels.
+- Introduce milestone rewards, such as bonus cashback after the **2nd** and **5th** completed purchases.
+- Design fast-earning loyalty point programs so customers can quickly experience financial benefits during the early stage.
 
-**Business objective:** Increase perceived customer value and encourage repeat purchases.
+**Expected business outcome**
+
+- Increase perceived customer value.
+- Encourage repeat purchases.
+- Improve long-term customer loyalty.
 
 ---
 
-#### 🚚  Reduce Delivery Delays for High-Risk Customers
+### 🚚 Improve Logistics & Delivery Performance
 
 Customers experiencing longer delivery times are more likely to churn.
 
 **Recommended actions**
 
 - Automatically flag orders with estimated delivery times exceeding **20 days**.
-- Prioritize warehouse allocation for new customers and customers predicted as high-risk by the churn model.
-- Track the percentage of delayed orders as a logistics KPI.
+- Prioritize warehouse processing for new customers and customers identified as high churn risk by the prediction model.
+- Provide proactive delay notifications and real-time shipment tracking.
 
-**Business objective:** Improve customer satisfaction and reduce churn caused by operational issues.
+**Expected business outcome**
 
----
-
-#### 💬 Detect Dissatisfied Customers Before They Leave
-
-EDA indicates that many churned customers either submit complaints or leave without giving any feedback.
-
-**Recommended actions**
-
-- Send a one-minute satisfaction survey after the second completed order.
-- Trigger a follow-up if a customer gives a low satisfaction rating or stops purchasing for more than **10 days**.
-- Route high-risk responses directly to customer support instead of waiting for formal complaints.
-
-**Business objective:** Resolve service issues before customers decide to leave.
+- Reduce delivery-related complaints.
+- Improve customer satisfaction.
+- Lower churn caused by operational delays.
 
 ---
 
-#### 🔄 Build an Automated Re-activation Workflow
+### 💬 Build a Proactive Feedback System
 
-Customers inactive for more than **10 days** show a significantly higher likelihood of churning.
+Many churned customers either submit complaints or leave without providing any feedback.
 
 **Recommended actions**
 
-- Automatically trigger a retention campaign after **7 days** without a purchase.
-- Escalate incentives if inactivity reaches **14 days** (larger discount or free shipping).
-- Stop promotional campaigns once the customer places a new order to optimize marketing costs.
+- Send a short satisfaction survey after customers receive their **second order**.
+- Trigger feedback requests automatically when customers remain inactive for more than **10 days**.
+- Route negative feedback directly to customer support for immediate follow-up instead of waiting for formal complaints.
 
-**Business objective:** Recover inactive customers before they become permanently lost.
+**Expected business outcome**
+
+- Detect dissatisfaction earlier.
+- Resolve customer issues before they lead to churn.
+- Improve overall customer experience.
+
+---
+
+### 🔄 Customer Re-activation Campaign
+
+Customers who stop purchasing for more than **7–10 days** are at a significantly higher risk of churning.
+
+**Recommended actions**
+
+- Automatically send limited-time discount vouchers (Flash Coupons) after **7 days** of inactivity.
+- Increase incentives if inactivity continues beyond **14 days**.
+- Recommend products based on customers' previous purchase history to encourage repeat orders.
+
+**Expected business outcome**
+
+- Recover inactive customers earlier.
+- Increase purchase frequency.
+- Reduce long-term customer churn.
+
 
 ## 5️⃣ **Create A Model For Predicting Churn** 
 
