@@ -458,7 +458,7 @@ plt.show()
 
 [In 12]: 
 
-Fine-tune XGBoost Model 
+Fine-tune Model 
 
 ```python
 # Lưới tham số cho Random Forest
