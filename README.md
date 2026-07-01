@@ -1,6 +1,6 @@
 #  Churn Prediction & Segmentation For Retention Strategy For Ecommerce | Machine Learning - Python
 
-![image](https://github.com/LeAnhTuan289/E-Commerce-Customer-Churn-Prediction-Machine-Learning---Python/blob/c1180c4998708444894b37b80ded75ffb2993b34/documents/OIP.webp)
+![image](https://github.com/LeAnhTuan289/E-Commerce-Customer-Churn-Prediction-Machine-Learning---Python/blob/fd628395ff011ba158a382848dd5d9b8a3a5083c/documents/1_5vzYeD8PE6DORWP72Wv71w.png)
 
 **Author:** Lê Anh Tuấn
 
@@ -123,31 +123,22 @@ from sklearn.cluster import AgglomerativeClustering
 ```
 📂 Mount Google Drive to Access Files
 
-[In 2]: 
+[In 2,3]: 
 
 ```python
 # Mount Google Drive to access files
 from google.colab import drive
 drive.mount('/content/drive')
 
-# Define the path to the project folder
-path = '/content/drive/MyDrive/ML_Final Project_Nguyen Hoang Do Uyen/'
-
-# Load the data
-df = pd.read_excel(path + 'churn_prediction.xlsx')
-```
-
-📂 Before diving into analysis, let's take a quick look at the first few rows of the dataset to examine its structure and key features
-
-[In 3]:
-
-```python
+df = pd.read_excel("/content/drive/MyDrive/K42_Lê Anh Tuấn _ Statistic & ML/churn_prediction.xlsx")
+print(df.shape)
 df.head(5)
 ```
 
+
 [Out 3]:
 
-![Image](https://github.com/user-attachments/assets/c79b4dee-2ffe-4deb-a9d5-9f2052465f45)
+![Image](https://github.com/LeAnhTuan289/E-Commerce-Customer-Churn-Prediction-Machine-Learning---Python/blob/fd628395ff011ba158a382848dd5d9b8a3a5083c/documents/p1.png)
 
 #### **💡 Data Understanding**
 
@@ -228,7 +219,7 @@ print(df.info())
 
 [Out 6]:
 
-![Image](https://github.com/user-attachments/assets/616fb912-8efd-4d42-a3a6-df95e4550e6a)
+![Image](https://github.com/LeAnhTuan289/E-Commerce-Customer-Churn-Prediction-Machine-Learning---Python/blob/fd628395ff011ba158a382848dd5d9b8a3a5083c/documents/p2.png)
 
 ## 3️⃣ **Train & Apply Churn Prediction Model**
 
@@ -266,7 +257,7 @@ df_encoded = df_encoded.drop(columns=['CustomerID'])
 
 [Out 7]:
 
-![Image](https://github.com/user-attachments/assets/9fade8d4-b571-41de-a8be-40dc78952773)
+![Image](https://github.com/LeAnhTuan289/E-Commerce-Customer-Churn-Prediction-Machine-Learning---Python/blob/fd628395ff011ba158a382848dd5d9b8a3a5083c/documents/p3.png)
 
 ### **📝 Split Data into Features (X) and Target (y)**
 
@@ -363,7 +354,7 @@ plt.show()
 
 [Out 10]:
 
-![image](https://github.com/user-attachments/assets/6216d1d9-fc0c-43b0-a40b-f3647378a36d)
+![image](https://github.com/LeAnhTuan289/E-Commerce-Customer-Churn-Prediction-Machine-Learning---Python/blob/fd628395ff011ba158a382848dd5d9b8a3a5083c/documents/p4.png)
 
 ### **💡Conclusion: ** 
 
@@ -373,7 +364,7 @@ Then, we will plot a histogram chart to visualize the differences between churn 
 
 ### 📝 **Plot Histogram**
 
-![Image](https://github.com/user-attachments/assets/2179d426-4175-407c-bc82-a8972f3a1de0)
+![Image](https://github.com/LeAnhTuan289/E-Commerce-Customer-Churn-Prediction-Machine-Learning---Python/blob/fd628395ff011ba158a382848dd5d9b8a3a5083c/documents/p5.png)
 
 ## 4️⃣ **Key Findings and Recommendations for Retention**  
 
